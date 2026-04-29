@@ -1,0 +1,186 @@
+@use '@angular/material' as mat;
+
+$pp-primary: mat.define-palette(mat.$green-palette, 700, 500, 900);
+$pp-accent: mat.define-palette(mat.$blue-palette, 700);
+$pp-warn: mat.define-palette(mat.$red-palette);
+
+$pp-theme: mat.define-dark-theme((
+  color: (
+    primary: $pp-primary,
+    accent: $pp-accent,
+    warn: $pp-warn,
+  ),
+  typography: mat.define-typography-config(
+    $font-family: 'Inter, sans-serif'
+  ),
+  density: 0,
+));
+
+@include mat.core();
+@include mat.all-component-themes($pp-theme);
+
+:root {
+  --color-bg: #121212;
+  --color-surface: #1E1E1E;
+  --color-surface-2: #2A2A2A;
+  --color-primary: #2E7D32;
+  --color-primary-light: #4CAF50;
+  --color-accent: #1565C0;
+  --color-text: #E0E0E0;
+  --color-text-secondary: #9E9E9E;
+  --color-border: #333333;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+
+.rp-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 20px rgba(46, 125, 50, 0.15);
+  }
+}
+
+.chip-categoria {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &.BASICA { background: rgba(255,193,7,0.15); color: #FFD54F; }
+  &.MEDIA { background: rgba(33,150,243,0.15); color: #64B5F6; }
+  &.PREMIUM { background: rgba(156,39,176,0.15); color: #CE93D8; }
+}
+
+.chip-tipo {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  background: rgba(255,255,255,0.08);
+  color: var(--color-text-secondary);
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary-light);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+.blur-overlay {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(6px);
+    background: rgba(18,18,18,0.3);
+    border-radius: 12px;
+    z-index: 1;
+  }
+  .lock-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    color: rgba(255,255,255,0.7);
+    font-size: 2rem;
+    text-align: center;
+  }
+}
+
+// ── mat-form-field (outline) en tema oscuro ─────────────────
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-outline-color: #555;
+  --mdc-outlined-text-field-hover-outline-color: #888;
+  --mdc-outlined-text-field-focus-outline-color: #4CAF50;
+  --mdc-outlined-text-field-label-text-color: #9E9E9E;
+  --mdc-outlined-text-field-input-text-color: #E0E0E0;
+  --mdc-outlined-text-field-caret-color: #4CAF50;
+  --mdc-outlined-text-field-disabled-outline-color: #333;
+}
+
+// ── mat-select trigger ───────────────────────────────────────
+.mat-mdc-select {
+  --mat-select-trigger-text-color: #E0E0E0;
+  --mat-select-placeholder-text-color: #9E9E9E;
+  --mat-select-enabled-arrow-color: #9E9E9E;
+  --mat-select-focused-arrow-color: #4CAF50;
+  --mat-select-panel-background-color: #2A2A2A;
+}
+
+// ── overlay panel ────────────────────────────────────────────
+.mat-mdc-select-panel {
+  background: #2A2A2A !important;
+  border: 1px solid #444 !important;
+}
+
+// ── opciones del panel ───────────────────────────────────────
+.mat-mdc-option {
+  --mat-option-label-text-color: #E0E0E0;
+  --mat-option-selected-state-label-text-color: #4CAF50;
+  --mat-option-hover-state-layer-color: rgba(76,175,80,0.12);
+  --mat-option-focus-state-layer-color: rgba(76,175,80,0.16);
+  --mat-option-selected-state-layer-color: rgba(76,175,80,0.08);
+  color: #E0E0E0 !important;
+
+  // MDC envuelve el texto en este span — hay que apuntarlo explícitamente
+  .mdc-list-item__primary-text {
+    color: #E0E0E0 !important;
+  }
+
+  &:hover:not(.mdc-list-item--disabled),
+  &.mat-mdc-option-active {
+    background: rgba(76,175,80,0.12) !important;
+  }
+
+  &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+    background: rgba(76,175,80,0.1) !important;
+    .mdc-list-item__primary-text { color: #4CAF50 !important; }
+  }
+}
+
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-color: var(--color-surface);
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 768px) {
+  .container { padding: 0 16px; }
+}
