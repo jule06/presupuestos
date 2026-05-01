@@ -1,5 +1,7 @@
 package com.proyectopresupuesto.presupuesto;
 
+import com.proyectopresupuesto.usuario.ContactoPublicoDTO;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -20,7 +22,9 @@ public record PresupuestoDTO(
         String tipoCliente,
         Integer duracionMeses,
         String notas,
-        LocalDateTime fechaCarga
+        LocalDateTime fechaCarga,
+        Boolean anonimo,
+        ContactoPublicoDTO contacto
 ) {
     public static PresupuestoDTO from(Presupuesto p) {
         return new PresupuestoDTO(
@@ -39,7 +43,9 @@ public record PresupuestoDTO(
                 p.getTipoCliente().name(),
                 p.getDuracionMeses(),
                 p.getNotas(),
-                p.getFechaCarga()
+                p.getFechaCarga(),
+                p.isAnonimo(),
+                !p.isAnonimo() ? ContactoPublicoDTO.from(p.getUsuario()) : null
         );
     }
 
@@ -55,7 +61,9 @@ public record PresupuestoDTO(
                 p.getCostoTotal(),
                 p.getCostoPorM2(),
                 null, null, null, null, null,
-                p.getFechaCarga()
+                p.getFechaCarga(),
+                true,
+                null
         );
     }
 }

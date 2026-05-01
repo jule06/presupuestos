@@ -1,13 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { MatRadioModule } from '@angular/material/radio';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../auth/auth.service';
 
@@ -23,16 +24,16 @@ const PROVINCIAS = [
   selector: 'app-nuevo-presupuesto',
   standalone: true,
   imports: [
-    CommonModule, ReactiveFormsModule,
+    CommonModule, RouterLink, ReactiveFormsModule,
     MatFormFieldModule, MatInputModule, MatSelectModule,
-    MatButtonModule, MatIconModule, MatSnackBarModule
+    MatButtonModule, MatIconModule, MatSnackBarModule, MatRadioModule
   ],
   template: `
     <div class="container" style="padding: 40px 24px; max-width: 700px;">
 
       <div style="margin-bottom: 32px;">
         <h1 style="margin:0 0 8px; font-size:1.8rem; font-weight:700;">Cargá tu presupuesto</h1>
-        <p style="margin:0; color:#9E9E9E;">Todos los datos son anónimos. Nadie sabrá que lo cargaste vos.</p>
+        <p style="margin:0; color:#9E9E9E;">Contribuí con la comunidad de arquitectos y diseñadores.</p>
       </div>
 
       <!-- Indicador de paso -->
@@ -210,6 +211,51 @@ const PROVINCIAS = [
             <mat-hint align="end">{{ paso3.value.notas?.length || 0 }}/500</mat-hint>
           </mat-form-field>
 
+          <!-- Anonimato -->
+          <div class="anonimato-section">
+            <p style="margin:0 0 12px; font-weight:500; color:#E0E0E0;">
+              ¿Querés que te contacten por este trabajo?
+            </p>
+
+            @if (auth.currentUser()?.perfilCompleto) {
+              <div class="anonimato-options">
+                <div class="anonimato-option"
+                     [class.selected]="paso3.value.anonimo === true"
+                     (click)="paso3.patchValue({ anonimo: true })">
+                  <mat-icon>visibility_off</mat-icon>
+                  <div>
+                    <div style="font-weight:600;">Anónimo</div>
+                    <div style="color:#9E9E9E; font-size:0.8rem;">Nadie sabrá que lo cargaste vos</div>
+                  </div>
+                </div>
+                <div class="anonimato-option"
+                     [class.selected]="paso3.value.anonimo === false"
+                     (click)="paso3.patchValue({ anonimo: false })">
+                  <mat-icon style="color:#4CAF50;">visibility</mat-icon>
+                  <div>
+                    <div style="font-weight:600;">Mostrar mi contacto</div>
+                    <div style="color:#9E9E9E; font-size:0.8rem;">Los usuarios podrán contactarte</div>
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="anonimato-option selected" style="pointer-events:none; opacity:0.7;">
+                <mat-icon>visibility_off</mat-icon>
+                <div>
+                  <div style="font-weight:600;">Anónimo</div>
+                  <div style="color:#9E9E9E; font-size:0.8rem;">Nadie sabrá que lo cargaste vos</div>
+                </div>
+              </div>
+              <div class="banner-perfil-incompleto" style="margin-top:12px;">
+                <mat-icon>info</mat-icon>
+                <span>
+                  Para mostrar tu contacto, primero completá tu perfil con al menos una red social o sitio web.
+                  <a routerLink="/perfil" style="color:#4CAF50; font-weight:600;">Ir a mi perfil</a>
+                </span>
+              </div>
+            }
+          </div>
+
           <div class="step-actions">
             <button mat-button type="button" (click)="currentStep = 2">
               <mat-icon>arrow_back</mat-icon> Anterior
@@ -259,6 +305,30 @@ const PROVINCIAS = [
       display: flex; justify-content: space-between; margin-top: 16px;
     }
 
+    .anonimato-section {
+      background: #1A1A1A;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .anonimato-options { display: flex; gap: 12px; flex-wrap: wrap; }
+    .anonimato-option {
+      flex: 1; min-width: 160px;
+      display: flex; align-items: center; gap: 12px;
+      border: 2px solid #333; border-radius: 8px;
+      padding: 12px 16px; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .anonimato-option:hover { border-color: #555; }
+    .anonimato-option.selected { border-color: #4CAF50; background: rgba(76,175,80,0.08); }
+
+    .banner-perfil-incompleto {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,193,7,0.08); border: 1px solid rgba(255,193,7,0.3);
+      color: #FFC107; padding: 10px 14px; border-radius: 8px; font-size: 0.85rem;
+    }
+
     @media (max-width: 600px) {
       .form-row { flex-direction: column; }
     }
@@ -268,7 +338,7 @@ export class NuevoPresupuestoComponent {
 
   private fb = inject(FormBuilder);
   private api = inject(ApiService);
-  private auth = inject(AuthService);
+  auth = inject(AuthService);
   private router = inject(Router);
   private snackbar = inject(MatSnackBar);
 
@@ -301,7 +371,8 @@ export class NuevoPresupuestoComponent {
     tipoCliente: ['', Validators.required],
     ganoTrabajo: ['', Validators.required],
     duracionMeses: [null as number | null],
-    notas: ['', Validators.maxLength(500)]
+    notas: ['', Validators.maxLength(500)],
+    anonimo: [true as boolean]
   });
 
   guardar() {
@@ -318,7 +389,11 @@ export class NuevoPresupuestoComponent {
     const payload = {
       ...this.paso1.value,
       costoTotal: this.paso2.value.costoTotal,
-      ...this.paso3.value,
+      tipoCliente: this.paso3.value.tipoCliente,
+      ganoTrabajo: this.paso3.value.ganoTrabajo,
+      duracionMeses: this.paso3.value.duracionMeses,
+      notas: this.paso3.value.notas,
+      anonimo: this.paso3.value.anonimo ?? true,
       desglose: Object.keys(desgloseData).length > 0 ? desgloseData : null
     };
 

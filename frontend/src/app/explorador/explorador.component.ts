@@ -14,7 +14,7 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ApiService } from '../core/services/api.service';
-import { Presupuesto, Estadisticas, PageResult, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/models/presupuesto.model';
+import { Presupuesto, ContactoPresupuesto, Estadisticas, PageResult, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/models/presupuesto.model';
 import { PresupuestoDetailDialogComponent } from './presupuesto-detail-dialog.component';
 
 const PROVINCIAS = [
@@ -206,6 +206,56 @@ const PROVINCIAS = [
                   <mat-icon>open_in_new</mat-icon>
                 </button>
               </div>
+
+              <!-- Contact row -->
+              @if (p.contacto) {
+                <div class="card-contacto" (click)="$event.stopPropagation()">
+                  <div class="contacto-name">
+                    <mat-icon style="font-size:14px;height:14px;width:14px;color:#4CAF50;">person</mat-icon>
+                    {{ p.contacto.nombre }} {{ p.contacto.apellido }}
+                    @if (p.contacto.ciudad) {
+                      <span style="color:#666;"> · {{ p.contacto.ciudad }}</span>
+                    }
+                  </div>
+                  <div class="contacto-icons">
+                    @if (p.contacto.whatsapp) {
+                      <a [href]="'https://wa.me/549' + p.contacto.whatsapp"
+                         target="_blank" mat-icon-button style="color:#25D366;" title="WhatsApp">
+                        <mat-icon>chat</mat-icon>
+                      </a>
+                    }
+                    @if (p.contacto.linkedinUrl) {
+                      <a [href]="p.contacto.linkedinUrl"
+                         target="_blank" mat-icon-button style="color:#0A66C2;" title="LinkedIn">
+                        <mat-icon>link</mat-icon>
+                      </a>
+                    }
+                    @if (p.contacto.instagramUrl) {
+                      <a [href]="p.contacto.instagramUrl"
+                         target="_blank" mat-icon-button style="color:#E1306C;" title="Instagram">
+                        <mat-icon>photo_camera</mat-icon>
+                      </a>
+                    }
+                    @if (p.contacto.behanceUrl) {
+                      <a [href]="p.contacto.behanceUrl"
+                         target="_blank" mat-icon-button style="color:#1769ff;" title="Behance">
+                        <mat-icon>brush</mat-icon>
+                      </a>
+                    }
+                    @if (p.contacto.sitioWeb) {
+                      <a [href]="p.contacto.sitioWeb"
+                         target="_blank" mat-icon-button style="color:#9E9E9E;" title="Sitio web">
+                        <mat-icon>language</mat-icon>
+                      </a>
+                    }
+                  </div>
+                </div>
+              } @else {
+                <div class="card-anonimo">
+                  <mat-icon style="font-size:12px;height:12px;width:12px;">visibility_off</mat-icon>
+                  Anónimo
+                </div>
+              }
             </div>
           }
 
@@ -332,6 +382,27 @@ const PROVINCIAS = [
     }
 
     .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+
+    .card-contacto {
+      border-top: 1px solid #2A2A2A;
+      padding-top: 8px;
+      font-size: 0.8rem;
+    }
+    .contacto-name {
+      display: flex; align-items: center; gap: 4px;
+      color: #B0B0B0; margin-bottom: 4px;
+    }
+    .contacto-icons { display: flex; gap: 0; margin-left: -8px; }
+    .contacto-icons a { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; }
+    .contacto-icons a mat-icon { font-size: 16px; height: 16px; width: 16px; }
+    .contacto-icons a:hover { background: rgba(255,255,255,0.05); }
+
+    .card-anonimo {
+      display: flex; align-items: center; gap: 4px;
+      color: #555; font-size: 0.75rem;
+      border-top: 1px solid #2A2A2A;
+      padding-top: 8px;
+    }
 
     .empty-state { text-align: center; padding: 64px; color: #555; }
     .empty-state mat-icon { display: block; margin: 0 auto 16px; }

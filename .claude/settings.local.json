@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(java --version)",
+      "Bash(mvn --version)",
+      "Bash(npm --version)",
+      "Bash(docker --version)",
+      "Bash(docker-compose --version)",
+      "Bash(sed -i 's/refprice-backend/proyectopresupuesto-backend/g; s/refprice-backend/proyectopresupuesto-backend/g; s/<name>refprice-backend<\\\\/name>/<name>proyectopresupuesto-backend<\\\\/name>/g' C:/Users/juli_/OneDrive/Desktop/Presupuestos/backend/pom.xml)",
+      "Bash(sed -i 's/com\\\\.refprice/com.proyectopresupuesto/g' C:/Users/juli_/OneDrive/Desktop/Presupuestos/backend/pom.xml)",
+      "Bash(sed -i 's/refprice-backend/proyectopresupuesto-backend/g' C:/Users/juli_/OneDrive/Desktop/Presupuestos/backend/pom.xml)",
+      "Bash(sed -i 's/refprice-frontend/proyectopresupuesto-frontend/g; s/\"name\": \"refprice-frontend\"/\"name\": \"proyectopresupuesto-frontend\"/g' C:/Users/juli_/OneDrive/Desktop/Presupuestos/frontend/package.json)",
+      "Bash(sed -i 's/\"refprice\"/\"proyectopresupuesto\"/g; s/refprice-frontend/proyectopresupuesto-frontend/g' C:/Users/juli_/OneDrive/Desktop/Presupuestos/frontend/angular.json)"
+    ]
+  }
+}

@@ -1,3 +1,17 @@
+export interface ContactoPresupuesto {
+  nombre: string;
+  apellido: string;
+  ciudad?: string;
+  provincia?: string;
+  whatsapp?: string;
+  linkedinUrl?: string;
+  instagramUrl?: string;
+  behanceUrl?: string;
+  pinterestUrl?: string;
+  sitioWeb?: string;
+  bio?: string;
+}
+
 export type TipoObra = 'VIVIENDA_NUEVA' | 'REFORMA_PARCIAL' | 'REFORMA_INTEGRAL' | 'LOCAL_COMERCIAL' | 'OFICINA' | 'OTRO';
 export type CategoriaTerminacion = 'BASICA' | 'MEDIA' | 'PREMIUM';
 export type GanoTrabajo = 'SI' | 'NO' | 'NO_SABE';
@@ -27,6 +41,8 @@ export interface Presupuesto {
   duracionMeses?: number;
   notas?: string;
   fechaCarga: string;
+  anonimo?: boolean;
+  contacto?: ContactoPresupuesto;
 }
 
 export interface PageResult<T> {

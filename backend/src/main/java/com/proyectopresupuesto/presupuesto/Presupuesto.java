@@ -67,6 +67,9 @@ public class Presupuesto {
     @Column(length = 500)
     private String notas;
 
+    @Column(nullable = false)
+    private boolean anonimo = true;
+
     @Column(name = "fecha_carga", nullable = false)
     private LocalDateTime fechaCarga = LocalDateTime.now();
 

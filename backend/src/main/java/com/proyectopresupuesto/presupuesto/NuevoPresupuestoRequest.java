@@ -18,5 +18,6 @@ public record NuevoPresupuestoRequest(
         @NotNull GanoTrabajo ganoTrabajo,
         @NotNull TipoCliente tipoCliente,
         @Positive Integer duracionMeses,
-        @Size(max = 500) String notas
+        @Size(max = 500) String notas,
+        Boolean anonimo
 ) {}

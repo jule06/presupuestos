@@ -28,6 +28,9 @@
       DATABASE_PASSWORD: proyectopresupuesto
       JWT_SECRET: ${JWT_SECRET:-proyectopresupuesto-secret-muy-largo-y-seguro-para-produccion-2024}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost}
     depends_on:
       postgres:
         condition: service_healthy

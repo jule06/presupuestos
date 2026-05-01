@@ -17,9 +17,37 @@ export class ApiService {
     return this.http.post<any>(`${this.base}/auth/google`, { idToken });
   }
 
+  register(data: { nombre: string; apellido: string; email: string; password: string }): Observable<{ verificationRequired: boolean }> {
+    return this.http.post<{ verificationRequired: boolean }>(`${this.base}/auth/register`, data);
+  }
+
+  loginLocal(email: string, password: string): Observable<{ token: string; esNuevo: boolean; accesoDesbloqueado: boolean }> {
+    return this.http.post<any>(`${this.base}/auth/login`, { email, password });
+  }
+
+  verifyEmail(token: string): Observable<void> {
+    return this.http.get<void>(`${this.base}/auth/verify-email`, { params: { token } });
+  }
+
+  resendVerification(email: string): Observable<void> {
+    return this.http.post<void>(`${this.base}/auth/resend-verification`, { email });
+  }
+
+  forgotPassword(email: string): Observable<void> {
+    return this.http.post<void>(`${this.base}/auth/forgot-password`, { email });
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<void> {
+    return this.http.post<void>(`${this.base}/auth/reset-password`, { token, newPassword });
+  }
+
   // Usuario
   getMe(): Observable<Usuario> {
     return this.http.get<Usuario>(`${this.base}/usuarios/me`);
+  }
+
+  updatePerfil(data: Partial<Usuario>): Observable<Usuario> {
+    return this.http.put<Usuario>(`${this.base}/usuarios/me`, data);
   }
 
   // Presupuestos

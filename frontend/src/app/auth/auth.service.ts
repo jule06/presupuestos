@@ -29,6 +29,35 @@ export class AuthService {
     );
   }
 
+  loginLocal(email: string, password: string) {
+    return this.api.loginLocal(email, password).pipe(
+      tap(res => {
+        localStorage.setItem(this.TOKEN_KEY, res.token);
+        this._token.set(res.token);
+      })
+    );
+  }
+
+  register(data: { nombre: string; apellido: string; email: string; password: string }): Observable<{ verificationRequired: boolean }> {
+    return this.api.register(data);
+  }
+
+  verifyEmail(token: string): Observable<void> {
+    return this.api.verifyEmail(token);
+  }
+
+  resendVerification(email: string): Observable<void> {
+    return this.api.resendVerification(email);
+  }
+
+  forgotPassword(email: string): Observable<void> {
+    return this.api.forgotPassword(email);
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<void> {
+    return this.api.resetPassword(token, newPassword);
+  }
+
   loadCurrentUser(): Observable<Usuario | null> {
     if (!this._token()) return of(null);
     return this.api.getMe().pipe(

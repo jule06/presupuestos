@@ -133,6 +133,67 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS, GANO_LABELS, TIPO_CLIE
             {{ data.notas }}
           </div>
         }
+
+        <!-- Contacto -->
+        <mat-divider style="margin: 16px 0; border-color: #333;"></mat-divider>
+        @if (data.contacto) {
+          <div style="margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #9E9E9E; text-transform: uppercase; letter-spacing: 0.5px;">
+            Contacto
+          </div>
+          <div class="contacto-card">
+            <div style="font-weight:600; margin-bottom:4px;">
+              {{ data.contacto.nombre }} {{ data.contacto.apellido }}
+            </div>
+            @if (data.contacto.ciudad || data.contacto.provincia) {
+              <div style="color:#9E9E9E; font-size:0.85rem; margin-bottom:8px;">
+                {{ data.contacto.ciudad }}{{ data.contacto.ciudad && data.contacto.provincia ? ', ' : '' }}{{ data.contacto.provincia }}
+              </div>
+            }
+            @if (data.contacto.bio) {
+              <div style="color:#ccc; font-size:0.85rem; margin-bottom:10px; font-style:italic;">
+                {{ data.contacto.bio }}
+              </div>
+            }
+            <div class="contacto-links">
+              @if (data.contacto.whatsapp) {
+                <a [href]="'https://wa.me/549' + data.contacto.whatsapp"
+                   target="_blank" class="contacto-link" style="color:#25D366;">
+                  <mat-icon style="font-size:16px;height:16px;width:16px;">chat</mat-icon> WhatsApp
+                </a>
+              }
+              @if (data.contacto.linkedinUrl) {
+                <a [href]="data.contacto.linkedinUrl" target="_blank" class="contacto-link" style="color:#0A66C2;">
+                  <mat-icon style="font-size:16px;height:16px;width:16px;">link</mat-icon> LinkedIn
+                </a>
+              }
+              @if (data.contacto.instagramUrl) {
+                <a [href]="data.contacto.instagramUrl" target="_blank" class="contacto-link" style="color:#E1306C;">
+                  <mat-icon style="font-size:16px;height:16px;width:16px;">photo_camera</mat-icon> Instagram
+                </a>
+              }
+              @if (data.contacto.behanceUrl) {
+                <a [href]="data.contacto.behanceUrl" target="_blank" class="contacto-link" style="color:#1769ff;">
+                  <mat-icon style="font-size:16px;height:16px;width:16px;">brush</mat-icon> Behance
+                </a>
+              }
+              @if (data.contacto.pinterestUrl) {
+                <a [href]="data.contacto.pinterestUrl" target="_blank" class="contacto-link" style="color:#E60023;">
+                  <mat-icon style="font-size:16px;height:16px;width:16px;">push_pin</mat-icon> Pinterest
+                </a>
+              }
+              @if (data.contacto.sitioWeb) {
+                <a [href]="data.contacto.sitioWeb" target="_blank" class="contacto-link" style="color:#9E9E9E;">
+                  <mat-icon style="font-size:16px;height:16px;width:16px;">language</mat-icon> Sitio web
+                </a>
+              }
+            </div>
+          </div>
+        } @else {
+          <div style="color:#555; font-size:0.85rem; display:flex; align-items:center; gap:6px;">
+            <mat-icon style="font-size:14px;height:14px;width:14px;">visibility_off</mat-icon>
+            Presupuesto anónimo
+          </div>
+        }
       </mat-dialog-content>
 
       <mat-dialog-actions align="end">
@@ -166,6 +227,17 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS, GANO_LABELS, TIPO_CLIE
     .desglose-item span:first-child { flex: 1; font-size: 0.9rem; }
     .desglose-value { font-weight: 600; color: #e0e0e0; }
     .desglose-pct { color: #9E9E9E; font-size: 0.8rem; min-width: 40px; text-align: right; }
+
+    .contacto-card {
+      background: #252525; border-radius: 10px; padding: 14px 16px;
+    }
+    .contacto-links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .contacto-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      text-decoration: none; font-size: 0.82rem; font-weight: 500;
+      background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px;
+    }
+    .contacto-link:hover { background: rgba(255,255,255,0.1); }
   `]
 })
 export class PresupuestoDetailDialogComponent {

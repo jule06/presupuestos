@@ -50,10 +50,13 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/model
           <!-- CTA -->
           <div class="cta-section">
             @if (!auth.isLoggedIn()) {
-              <p class="cta-hint">
-                <mat-icon style="font-size:14px;height:14px;width:14px;vertical-align:middle;">lock_open</mat-icon>
-                Ingresá con Google arriba y cargá un presupuesto para desbloquear
-              </p>
+              <a mat-raised-button color="primary" routerLink="/auth" style="font-size:1rem; padding:12px 32px;">
+                <mat-icon>person_add</mat-icon>
+                Crear cuenta gratis
+              </a>
+              <a mat-button routerLink="/auth" style="color:#9E9E9E; font-size:0.875rem;">
+                ¿Ya tenés cuenta? Ingresá
+              </a>
             } @else if (auth.currentUser() && !auth.currentUser()!.accesoDesbloqueado) {
               <a mat-raised-button color="primary" routerLink="/cargar" style="font-size:1rem; padding:12px 32px;">
                 <mat-icon>add</mat-icon>
@@ -65,6 +68,35 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/model
                 Ver el explorador
               </a>
             }
+          </div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section class="how-section">
+        <div class="container">
+          <h2 class="section-title">Cómo funciona</h2>
+          <div class="steps-grid">
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-icon"><mat-icon>person_add</mat-icon></div>
+              <h3>Creá tu cuenta</h3>
+              <p>Con Google o con email. En menos de un minuto.</p>
+            </div>
+            <div class="step-arrow"><mat-icon>arrow_forward</mat-icon></div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-icon"><mat-icon>upload_file</mat-icon></div>
+              <h3>Cargá un presupuesto</h3>
+              <p>Uno tuyo, real. En 3 minutos.</p>
+            </div>
+            <div class="step-arrow"><mat-icon>arrow_forward</mat-icon></div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-icon"><mat-icon>insights</mat-icon></div>
+              <h3>Accedé a todos</h3>
+              <p>{{ totalPresupuestos() > 0 ? totalPresupuestos() + ' presupuestos con' : 'Datos con' }} desglose, filtros y estadísticas.</p>
+            </div>
           </div>
         </div>
       </section>
@@ -123,35 +155,6 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/model
                 </div>
               }
             }
-          </div>
-        </div>
-      </section>
-
-      <!-- How it works -->
-      <section class="how-section">
-        <div class="container">
-          <h2 class="section-title">Cómo funciona</h2>
-          <div class="steps-grid">
-            <div class="step">
-              <div class="step-number">1</div>
-              <div class="step-icon"><mat-icon>login</mat-icon></div>
-              <h3>Ingresá con Google</h3>
-              <p>Sin formularios largos. Un click y ya tenés cuenta.</p>
-            </div>
-            <div class="step-arrow"><mat-icon>arrow_forward</mat-icon></div>
-            <div class="step">
-              <div class="step-number">2</div>
-              <div class="step-icon"><mat-icon>upload_file</mat-icon></div>
-              <h3>Cargá un presupuesto</h3>
-              <p>Uno tuyo, real. En 3 minutos.</p>
-            </div>
-            <div class="step-arrow"><mat-icon>arrow_forward</mat-icon></div>
-            <div class="step">
-              <div class="step-number">3</div>
-              <div class="step-icon"><mat-icon>insights</mat-icon></div>
-              <h3>Accedé a todos</h3>
-              <p>{{ totalPresupuestos() > 0 ? totalPresupuestos() + ' presupuestos con' : 'Datos con' }} desglose, filtros y estadísticas.</p>
-            </div>
           </div>
         </div>
       </section>
@@ -228,8 +231,7 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/model
       background: #333;
     }
 
-    .cta-section { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
-    .cta-hint { margin: 0; color: #9E9E9E; font-size: 0.85rem; display: flex; align-items: center; gap: 4px; }
+    .cta-section { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
 
     .preview-section { padding: 64px 0; background: rgba(255,255,255,0.02); }
 

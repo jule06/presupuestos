@@ -51,6 +51,12 @@ public class PresupuestoService {
         p.setTipoCliente(req.tipoCliente());
         p.setDuracionMeses(req.duracionMeses());
         p.setNotas(req.notas());
+        boolean esAnonimo = req.anonimo() == null || req.anonimo();
+        if (!esAnonimo && !usuario.isPerfilCompleto()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "PERFIL_INCOMPLETO");
+        }
+        p.setAnonimo(esAnonimo);
         p.setUsuario(usuario);
 
         Presupuesto saved = presupuestoRepo.save(p);
@@ -64,6 +70,7 @@ public class PresupuestoService {
         return PresupuestoDTO.from(saved);
     }
 
+    @Transactional(readOnly = true)
     public Page<PresupuestoDTO> listar(
             TipoObra tipoObra, String provincia, CategoriaTerminacion categoria,
             Integer anioDesde, Integer anioHasta,
@@ -122,6 +129,7 @@ public class PresupuestoService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<PresupuestoDTO> misPresupuestos(Long usuarioId) {
         return presupuestoRepo.findByUsuarioId(usuarioId).stream()
                 .map(PresupuestoDTO::from)
@@ -142,13 +150,16 @@ public class PresupuestoService {
         Usuario usuario = p.getUsuario();
         int nuevaCantidad = Math.max(0, usuario.getPresupuestosCargados() - 1);
         usuario.setPresupuestosCargados(nuevaCantidad);
+        if (nuevaCantidad == 0) {
+            usuario.setAccesoDesbloqueado(false);
+        }
         usuarioRepo.save(usuario);
     }
 
     private void verificarAcceso(Long usuarioId) {
         Usuario usuario = usuarioRepo.findById(usuarioId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if (!usuario.getAccesoDesbloqueado()) {
+        if (usuario.getPresupuestosCargados() <= 0) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "Debés cargar al menos un presupuesto para acceder");
         }
