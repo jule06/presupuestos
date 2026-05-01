@@ -18,4 +18,5 @@ FROM nginx:alpine
 COPY --from=build /app/dist/proyectopresupuesto-frontend/browser /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+#CMD ["nginx", "-g", "daemon off;"]
+CMD ["/bin/sh", "-c", "sed -i 's/listen ${PORT:-80}/listen '\"$PORT\"'/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
