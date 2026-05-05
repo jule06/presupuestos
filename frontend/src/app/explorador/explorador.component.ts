@@ -11,6 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatMenuModule } from '@angular/material/menu';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ApiService } from '../core/services/api.service';
 import { Presupuesto, Estadisticas, PageResult, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/models/presupuesto.model';
@@ -31,7 +32,8 @@ const PROVINCIAS = [
     CommonModule, RouterLink, ReactiveFormsModule,
     MatFormFieldModule, MatSelectModule, MatInputModule,
     MatButtonModule, MatIconModule, MatCardModule,
-    MatProgressBarModule, MatDialogModule, MatPaginatorModule
+    MatProgressBarModule, MatDialogModule, MatPaginatorModule,
+    MatMenuModule
   ],
   template: `
     <div class="explorador-layout" [formGroup]="filtros">
@@ -163,13 +165,26 @@ const PROVINCIAS = [
 
           <span class="toolbar-spacer"></span>
 
-          <mat-form-field appearance="outline" class="sort-select">
-            <mat-select formControlName="sortBy">
-              <mat-option value="fechaCarga">Más recientes</mat-option>
-              <mat-option value="costoPorM2">Costo/m²</mat-option>
-              <mat-option value="superficieM2">Superficie</mat-option>
-            </mat-select>
-          </mat-form-field>
+          <button class="sort-btn" [matMenuTriggerFor]="sortMenu" #sortTrigger="matMenuTrigger">
+            <mat-icon class="sort-icon">swap_vert</mat-icon>
+            <span class="sort-label">{{ sortLabel() }}</span>
+            <mat-icon class="sort-chevron" [class.rotated]="sortTrigger.menuOpen">expand_more</mat-icon>
+          </button>
+
+          <mat-menu #sortMenu="matMenu" xPosition="before" panelClass="sort-menu-panel">
+            <button mat-menu-item (click)="setSort('fechaCarga')" [class.sort-item-active]="filtros.value.sortBy === 'fechaCarga'">
+              <mat-icon>schedule</mat-icon>
+              <span>Más recientes</span>
+            </button>
+            <button mat-menu-item (click)="setSort('costoPorM2')" [class.sort-item-active]="filtros.value.sortBy === 'costoPorM2'">
+              <mat-icon>attach_money</mat-icon>
+              <span>Costo/m²</span>
+            </button>
+            <button mat-menu-item (click)="setSort('superficieM2')" [class.sort-item-active]="filtros.value.sortBy === 'superficieM2'">
+              <mat-icon>straighten</mat-icon>
+              <span>Superficie</span>
+            </button>
+          </mat-menu>
         </div>
 
         <!-- Content body -->
@@ -498,13 +513,41 @@ const PROVINCIAS = [
 
     .toolbar-spacer { flex: 1; min-width: 8px; }
 
-    .sort-select {
-      margin: 0;
-      min-width: 145px;
-      max-width: 180px;
-      font-size: 0.85rem;
+    /* ── Sort button ─────────────────────────────────────────── */
+    .sort-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #1E1E1E;
+      border: 1px solid #2E2E2E;
+      border-radius: 10px;
+      color: #B0B0B0;
+      padding: 0 12px;
+      height: 40px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.18s, border-color 0.18s, color 0.18s;
+      white-space: nowrap;
+      flex-shrink: 0;
+      letter-spacing: 0.01em;
     }
-    .sort-select .mat-mdc-form-field-subscript-wrapper { display: none; }
+    .sort-btn:hover {
+      background: #262626;
+      border-color: #3E3E3E;
+      color: #E0E0E0;
+    }
+    .sort-btn .sort-icon {
+      font-size: 15px; height: 15px; width: 15px;
+      color: #4CAF50;
+    }
+    .sort-btn .sort-chevron {
+      font-size: 16px; height: 16px; width: 16px;
+      color: #666;
+      transition: transform 0.2s ease;
+    }
+    .sort-btn .sort-chevron.rotated { transform: rotate(180deg); }
 
     /* ── Main content ────────────────────────────────────────── */
     .main-content {
@@ -778,6 +821,19 @@ export class ExploradorComponent implements OnInit {
     if (v.costoM2Min) chips.push({ label: `≥USD${v.costoM2Min}/m²`, key: 'costoM2Min' });
     if (v.costoM2Max) chips.push({ label: `≤USD${v.costoM2Max}/m²`, key: 'costoM2Max' });
     return chips;
+  }
+
+  sortLabel(): string {
+    const labels: Record<string, string> = {
+      fechaCarga: 'Más recientes',
+      costoPorM2: 'Costo/m²',
+      superficieM2: 'Superficie'
+    };
+    return labels[this.filtros.value.sortBy ?? 'fechaCarga'] ?? 'Ordenar';
+  }
+
+  setSort(value: string): void {
+    this.filtros.patchValue({ sortBy: value });
   }
 
   removeFilter(key: string): void {

@@ -193,3 +193,37 @@ html, body {
 .mobile-fullscreen-dialog .mdc-dialog__surface {
   border-radius: 0 !important;
 }
+
+/* ── Sort dropdown panel ─────────────────────────────────────── */
+.sort-menu-panel {
+  .mat-mdc-menu-content {
+    background: #1A1A1A !important;
+    border: 1px solid #2E2E2E;
+    border-radius: 12px !important;
+    padding: 4px !important;
+    min-width: 170px;
+  }
+
+  .mat-mdc-menu-item {
+    border-radius: 8px;
+    min-height: 42px;
+    font-size: 0.875rem;
+    color: #C0C0C0;
+    transition: background 0.15s;
+
+    .mat-icon { color: #666; font-size: 18px; height: 18px; width: 18px; }
+
+    &:hover .mat-icon { color: #9E9E9E; }
+  }
+
+  .mat-mdc-menu-item:hover:not([disabled]) {
+    background: rgba(255,255,255,0.05) !important;
+    color: #E0E0E0;
+  }
+
+  .mat-mdc-menu-item.sort-item-active {
+    background: rgba(76,175,80,0.08) !important;
+    color: #4CAF50 !important;
+    .mat-icon { color: #4CAF50 !important; }
+  }
+}
