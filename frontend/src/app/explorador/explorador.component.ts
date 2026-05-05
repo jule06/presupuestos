@@ -195,19 +195,6 @@ const PROVINCIAS = [
             }
           </button>
 
-          @if (activeFilterChips().length > 0) {
-            <div class="active-chips">
-              @for (chip of activeFilterChips(); track chip.key) {
-                <span class="filter-chip">
-                  {{ chip.label }}
-                  <button class="chip-remove" (click)="removeFilter(chip.key)">
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </span>
-              }
-            </div>
-          }
-
           <span class="toolbar-spacer"></span>
 
           <button class="sort-btn" [matMenuTriggerFor]="sortMenu" #sortTrigger="matMenuTrigger">
