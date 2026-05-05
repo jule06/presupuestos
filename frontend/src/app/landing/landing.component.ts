@@ -26,7 +26,7 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/model
             Conocé el precio real<br>de la obra
           </h1>
           <p class="hero-subtitle">
-            Presupuestos reales de arquitectos, para arquitectos.<br>
+            Presupuestos reales de arquitectos, para arquitectos.
             Anónimos y verificados por la comunidad.
           </p>
 
@@ -184,7 +184,7 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/model
     }
 
     .hero-title {
-      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-size: clamp(1.8rem, 5vw, 3.8rem);
       font-weight: 800;
       line-height: 1.1;
       margin: 0 0 20px;
@@ -203,11 +203,18 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/model
       align-items: center;
       gap: 32px;
       margin-bottom: 48px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 4px;
     }
+    .stats-row::-webkit-scrollbar { display: none; }
 
     .stat-item {
       display: flex;
       flex-direction: column;
+      flex-shrink: 0;
     }
 
     .stat-number {
@@ -229,6 +236,7 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/model
       width: 1px;
       height: 40px;
       background: #333;
+      flex-shrink: 0;
     }
 
     .cta-section { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -292,10 +300,22 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/model
     .step p { color: #9E9E9E; font-size: 0.875rem; margin: 0; }
     .step-arrow mat-icon { color: #444; }
 
+    @media (max-width: 599px) {
+      .hero { padding: 32px 0 24px; }
+      .hero-subtitle { font-size: 0.9rem; }
+      .stats-row { gap: 20px; margin-bottom: 28px; }
+      .stat-number { font-size: 1.5rem; }
+      .stat-divider { height: 32px; }
+      .cta-section { align-items: stretch; }
+      .section-title { font-size: 1.4rem; }
+      .preview-grid { grid-template-columns: 1fr; gap: 12px; }
+      .how-section { padding: 40px 0 48px; }
+      .preview-section { padding: 40px 0; }
+    }
+
     @media (max-width: 768px) {
       .steps-grid { flex-direction: column; }
       .step-arrow { transform: rotate(90deg); }
-      .stats-row { gap: 16px; }
     }
   `]
 })

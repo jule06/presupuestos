@@ -29,7 +29,7 @@ const PROVINCIAS = [
     MatButtonModule, MatIconModule, MatSnackBarModule, MatRadioModule
   ],
   template: `
-    <div class="container" style="padding: 40px 24px; max-width: 700px;">
+    <div class="container form-page">
 
       <div style="margin-bottom: 32px;">
         <h1 style="margin:0 0 8px; font-size:1.8rem; font-weight:700;">Cargá tu presupuesto</h1>
@@ -329,8 +329,21 @@ const PROVINCIAS = [
       color: #FFC107; padding: 10px 14px; border-radius: 8px; font-size: 0.85rem;
     }
 
-    @media (max-width: 600px) {
+    .form-page { padding: 40px 24px; max-width: 700px; }
+
+    @media (max-width: 599px) {
+      .form-page { padding: 20px 16px 24px; }
       .form-row { flex-direction: column; }
+      .step-actions {
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .step-actions button {
+        flex: 1;
+        min-width: 0;
+      }
+      .anonimato-options { flex-direction: column; }
+      .anonimato-option { min-width: 0; }
     }
   `]
 })

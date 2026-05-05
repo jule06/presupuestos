@@ -34,7 +34,7 @@ const PROVINCIAS = [
     MatChipsModule, MatDialogModule
   ],
   template: `
-    <div class="container" style="padding: 40px 24px; max-width: 900px;">
+    <div class="container perfil-page">
 
       <!-- Header -->
       <div class="perfil-header">
@@ -244,11 +244,11 @@ const PROVINCIAS = [
       </mat-card>
 
       <!-- Save button -->
-      <div style="margin-top: 24px; display:flex; gap:16px; align-items:center;">
+      <div class="save-bar">
         <button mat-raised-button color="primary"
                 [disabled]="form.invalid || saving"
                 (click)="guardar()"
-                style="min-width:160px;">
+                class="save-btn">
           @if (saving) {
             <mat-spinner diameter="20" style="display:inline-block;margin-right:8px;"></mat-spinner>
           } @else {
@@ -314,6 +314,8 @@ const PROVINCIAS = [
     </div>
   `,
   styles: [`
+    .perfil-page { padding: 40px 24px; max-width: 900px; }
+
     .perfil-header { display: flex; gap: 20px; align-items: center; margin-bottom: 32px; }
     .avatar { width: 72px; height: 72px; border-radius: 50%; overflow: hidden; background: #333; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -371,8 +373,29 @@ const PROVINCIAS = [
 
     .presupuestos-list { display: flex; flex-direction: column; gap: 12px; }
     .presupuesto-row { display: flex; align-items: center; gap: 16px; padding: 16px; }
-    .row-main { flex: 1; }
-    .row-price { min-width: 140px; text-align: right; }
+    .row-main { flex: 1; min-width: 0; }
+    .row-price { min-width: 120px; text-align: right; flex-shrink: 0; }
+
+    .save-bar { margin-top: 24px; display: flex; gap: 16px; align-items: center; }
+    .save-btn { min-width: 160px; }
+
+    @media (max-width: 599px) {
+      .perfil-page { padding: 16px 16px 80px; }
+      .perfil-header { flex-direction: column; align-items: center; text-align: center; }
+      .perfil-stats { flex-wrap: wrap; gap: 20px; padding: 16px; }
+      .presupuesto-row { flex-wrap: wrap; }
+      .row-price { min-width: 0; flex: 1; text-align: left; }
+      .save-bar {
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        padding: 12px 16px;
+        background: #1A1A1A;
+        border-top: 1px solid #333;
+        margin: 0;
+        z-index: 50;
+      }
+      .save-btn { flex: 1; }
+    }
   `]
 })
 export class PerfilComponent implements OnInit {

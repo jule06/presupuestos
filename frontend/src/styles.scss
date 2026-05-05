@@ -184,3 +184,12 @@ html, body {
 @media (max-width: 768px) {
   .container { padding: 0 16px; }
 }
+
+.mobile-fullscreen-dialog .mat-mdc-dialog-container {
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+.mobile-fullscreen-dialog .mdc-dialog__surface {
+  border-radius: 0 !important;
+}
