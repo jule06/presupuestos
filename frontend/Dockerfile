@@ -19,4 +19,4 @@ COPY --from=build /app/dist/proyectopresupuesto-frontend/browser /usr/share/ngin
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 #CMD ["nginx", "-g", "daemon off;"]
-CMD ["/bin/sh", "-c", "DNS=$(grep nameserver /etc/resolv.conf | head -1 | awk '{print $2}') && sed -i 's/listen ${PORT:-80}/listen '\"$PORT\"'/g' /etc/nginx/conf.d/default.conf && sed -i \"s/RAILWAY_DNS/$DNS/g\" /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+CMD ["/bin/sh", "-c", "DNS=$(grep nameserver /etc/resolv.conf | head -1 | awk '{print $2}'); echo \"$DNS\" | grep -q ':' && DNS=\"[$DNS]\"; sed -i 's/listen ${PORT:-80}/listen '\"$PORT\"'/g' /etc/nginx/conf.d/default.conf && sed -i \"s|RAILWAY_DNS|$DNS|g\" /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
