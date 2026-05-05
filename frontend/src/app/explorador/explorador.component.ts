@@ -2,12 +2,8 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -30,8 +26,7 @@ const PROVINCIAS = [
   standalone: true,
   imports: [
     CommonModule, RouterLink, ReactiveFormsModule,
-    MatFormFieldModule, MatSelectModule, MatInputModule,
-    MatButtonModule, MatIconModule, MatCardModule,
+    MatButtonModule, MatIconModule,
     MatProgressBarModule, MatDialogModule, MatPaginatorModule,
     MatMenuModule
   ],
@@ -43,97 +38,147 @@ const PROVINCIAS = [
 
       <!-- Filter Drawer -->
       <aside class="filtros-panel" [class.open]="showFilters()">
+
+        <!-- Drag handle (mobile) -->
         <div class="drawer-handle"></div>
+
+        <!-- Header -->
         <div class="filtros-header">
-          <span class="filtros-title">Filtros</span>
-          <div style="display:flex;gap:4px;align-items:center;">
-            <button mat-button (click)="limpiarFiltros()" style="color:#9E9E9E;font-size:0.8rem;min-width:0;">
-              Limpiar
-            </button>
-            <button mat-icon-button (click)="showFilters.set(false)" style="color:#9E9E9E;">
+          <div class="header-left">
+            <mat-icon class="header-icon">tune</mat-icon>
+            <span class="filtros-title">Filtros</span>
+            @if (activeFiltersCount() > 0) {
+              <span class="header-badge">{{ activeFiltersCount() }}</span>
+            }
+          </div>
+          <div class="header-actions">
+            @if (activeFiltersCount() > 0) {
+              <button class="clear-all-btn" (click)="limpiarFiltros()">Limpiar todo</button>
+            }
+            <button class="close-btn" (click)="showFilters.set(false)">
               <mat-icon>close</mat-icon>
             </button>
           </div>
         </div>
 
-        <div class="filtros-form">
-          <mat-form-field appearance="outline" style="width:100%">
-            <mat-label>Tipo de obra</mat-label>
-            <mat-select formControlName="tipoObra">
-              <mat-option value="">Todos</mat-option>
-              @for (t of tiposObra; track t.value) {
-                <mat-option [value]="t.value">{{ t.label }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
+        <!-- Body scrollable -->
+        <div class="filtros-body">
 
-          <mat-form-field appearance="outline" style="width:100%">
-            <mat-label>Provincia</mat-label>
-            <mat-select formControlName="provincia">
-              <mat-option value="">Todas</mat-option>
-              @for (p of provincias; track p) {
-                <mat-option [value]="p">{{ p }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" style="width:100%">
-            <mat-label>Categoría</mat-label>
-            <mat-select formControlName="categoriaTerminacion">
-              <mat-option value="">Todas</mat-option>
-              <mat-option value="BASICA">Básica</mat-option>
-              <mat-option value="MEDIA">Media</mat-option>
-              <mat-option value="PREMIUM">Premium</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <div class="filtro-grupo">
-            <span class="filtro-label">Año</span>
-            <div class="form-row-2">
-              <mat-form-field appearance="outline">
-                <mat-label>Desde</mat-label>
-                <input matInput type="number" formControlName="anioDesde" placeholder="2018" inputmode="numeric">
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Hasta</mat-label>
-                <input matInput type="number" formControlName="anioHasta" placeholder="2025" inputmode="numeric">
-              </mat-form-field>
+          <!-- Categoría: pills -->
+          <div class="filter-section">
+            <div class="section-label">Categoría de terminación</div>
+            <div class="cat-pills">
+              <button class="cat-pill BASICA"
+                      [class.active]="filtros.value.categoriaTerminacion === 'BASICA'"
+                      (click)="toggleCategoria('BASICA')">
+                <span class="cat-dot"></span>Básica
+              </button>
+              <button class="cat-pill MEDIA"
+                      [class.active]="filtros.value.categoriaTerminacion === 'MEDIA'"
+                      (click)="toggleCategoria('MEDIA')">
+                <span class="cat-dot"></span>Media
+              </button>
+              <button class="cat-pill PREMIUM"
+                      [class.active]="filtros.value.categoriaTerminacion === 'PREMIUM'"
+                      (click)="toggleCategoria('PREMIUM')">
+                <span class="cat-dot"></span>Premium
+              </button>
             </div>
           </div>
 
-          <div class="filtro-grupo">
-            <span class="filtro-label">Superficie (m²)</span>
-            <div class="form-row-2">
-              <mat-form-field appearance="outline">
-                <mat-label>Mín</mat-label>
-                <input matInput type="number" formControlName="m2Min" placeholder="50" inputmode="numeric">
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Máx</mat-label>
-                <input matInput type="number" formControlName="m2Max" placeholder="500" inputmode="numeric">
-              </mat-form-field>
+          <div class="section-divider"></div>
+
+          <!-- Tipo de obra -->
+          <div class="filter-section">
+            <div class="section-label">Tipo de obra</div>
+            <div class="select-wrap">
+              <select formControlName="tipoObra" class="native-select">
+                <option value="">Todos los tipos</option>
+                @for (t of tiposObra; track t.value) {
+                  <option [value]="t.value">{{ t.label }}</option>
+                }
+              </select>
+              <mat-icon class="select-chevron">expand_more</mat-icon>
             </div>
           </div>
 
-          <div class="filtro-grupo">
-            <span class="filtro-label">Costo/m² (USD)</span>
-            <div class="form-row-2">
-              <mat-form-field appearance="outline">
-                <mat-label>Mín</mat-label>
-                <input matInput type="number" formControlName="costoM2Min" placeholder="300" inputmode="numeric">
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>Máx</mat-label>
-                <input matInput type="number" formControlName="costoM2Max" placeholder="1500" inputmode="numeric">
-              </mat-form-field>
+          <div class="section-divider"></div>
+
+          <!-- Provincia -->
+          <div class="filter-section">
+            <div class="section-label">Provincia</div>
+            <div class="select-wrap">
+              <select formControlName="provincia" class="native-select">
+                <option value="">Todas las provincias</option>
+                @for (p of provincias; track p) {
+                  <option [value]="p">{{ p }}</option>
+                }
+              </select>
+              <mat-icon class="select-chevron">expand_more</mat-icon>
             </div>
           </div>
 
-          <button mat-raised-button color="primary" (click)="showFilters.set(false)"
-                  style="width:100%;margin-top:12px;min-height:48px;font-size:0.95rem;">
-            Ver resultados
+          <div class="section-divider"></div>
+
+          <!-- Año -->
+          <div class="filter-section">
+            <div class="section-label">Año del presupuesto</div>
+            <div class="range-row">
+              <input class="range-input" type="number" formControlName="anioDesde"
+                     placeholder="Desde" inputmode="numeric">
+              <span class="range-dash">—</span>
+              <input class="range-input" type="number" formControlName="anioHasta"
+                     placeholder="Hasta" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <!-- Superficie -->
+          <div class="filter-section">
+            <div class="section-label">Superficie (m²)</div>
+            <div class="range-row">
+              <input class="range-input" type="number" formControlName="m2Min"
+                     placeholder="Mín" inputmode="numeric">
+              <span class="range-dash">—</span>
+              <input class="range-input" type="number" formControlName="m2Max"
+                     placeholder="Máx" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <!-- Costo/m² -->
+          <div class="filter-section">
+            <div class="section-label">Costo/m² (USD)</div>
+            <div class="range-row">
+              <div class="range-input-wrap">
+                <span class="range-prefix">$</span>
+                <input class="range-input prefixed" type="number" formControlName="costoM2Min"
+                       placeholder="Mín" inputmode="numeric">
+              </div>
+              <span class="range-dash">—</span>
+              <div class="range-input-wrap">
+                <span class="range-prefix">$</span>
+                <input class="range-input prefixed" type="number" formControlName="costoM2Max"
+                       placeholder="Máx" inputmode="numeric">
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Footer sticky -->
+        <div class="filtros-footer">
+          <button class="apply-btn" (click)="showFilters.set(false)">
+            @if (totalElements() > 0) {
+              Ver {{ totalElements() }} resultado{{ totalElements() !== 1 ? 's' : '' }}
+            } @else {
+              Ver resultados
+            }
           </button>
         </div>
+
       </aside>
 
       <!-- Main Content -->
@@ -376,48 +421,148 @@ const PROVINCIAS = [
       left: 0;
       bottom: 0;
       width: 300px;
-      background: #1A1A1A;
-      border-right: 1px solid #2A2A2A;
+      background: #141414;
+      border-right: 1px solid #1E1E1E;
       z-index: 401;
       transform: translateX(-100%);
       transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      overflow-y: auto;
-      padding: 0 16px 24px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
     .filtros-panel.open {
       transform: translateX(0);
-      box-shadow: 8px 0 40px rgba(0,0,0,0.7);
+      box-shadow: 24px 0 64px rgba(0,0,0,0.6);
     }
 
     .drawer-handle { display: none; }
 
+    /* Header */
     .filtros-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 0 12px;
-      position: sticky;
-      top: 0;
-      background: #1A1A1A;
-      z-index: 1;
+      padding: 16px 20px 14px;
+      border-bottom: 1px solid #1E1E1E;
+      flex-shrink: 0;
     }
-    .filtros-title { font-weight: 600; font-size: 1rem; }
+    .header-left { display: flex; align-items: center; gap: 8px; }
+    .header-icon { font-size: 16px; height: 16px; width: 16px; color: #4CAF50; }
+    .filtros-title { font-weight: 600; font-size: 0.9rem; letter-spacing: -0.01em; }
+    .header-badge {
+      background: #4CAF50; color: #fff;
+      font-size: 0.62rem; font-weight: 700;
+      border-radius: 10px; padding: 1px 6px;
+      line-height: 16px;
+    }
+    .header-actions { display: flex; align-items: center; gap: 4px; }
+    .clear-all-btn {
+      background: none; border: none; cursor: pointer; font-family: inherit;
+      font-size: 0.75rem; font-weight: 500; color: #4CAF50;
+      padding: 4px 8px; border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .clear-all-btn:hover { background: rgba(76,175,80,0.08); }
+    .close-btn {
+      background: none; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 7px; color: #555;
+      transition: background 0.15s, color 0.15s;
+    }
+    .close-btn mat-icon { font-size: 17px; height: 17px; width: 17px; }
+    .close-btn:hover { background: #222; color: #C0C0C0; }
 
-    .filtros-form {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+    /* Scrollable body */
+    .filtros-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 20px;
+      scrollbar-width: thin;
+      scrollbar-color: #2A2A2A transparent;
     }
-    .filtros-form mat-form-field { font-size: 0.85rem; }
 
-    .filtro-grupo { margin-bottom: 4px; }
-    .filtro-label {
-      font-size: 0.72rem; color: #9E9E9E;
-      text-transform: uppercase; letter-spacing: 0.5px;
-      display: block; margin-bottom: 4px;
+    /* Sections */
+    .filter-section { padding: 16px 0; }
+    .section-label {
+      font-size: 0.68rem; font-weight: 600;
+      color: #555; text-transform: uppercase; letter-spacing: 0.07em;
+      margin-bottom: 10px;
     }
-    .form-row-2 { display: flex; gap: 8px; }
-    .form-row-2 mat-form-field { flex: 1; }
+    .section-divider { height: 1px; background: #1A1A1A; margin: 0 -20px; }
+
+    /* Category pills */
+    .cat-pills { display: flex; gap: 7px; }
+    .cat-pill {
+      flex: 1; height: 34px; border-radius: 8px;
+      border: 1px solid #252525; background: #1A1A1A;
+      color: #777; font-size: 0.77rem; font-weight: 500;
+      cursor: pointer; font-family: inherit;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: all 0.15s;
+    }
+    .cat-pill:hover:not(.active) { border-color: #333; color: #A0A0A0; }
+    .cat-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .cat-pill.BASICA .cat-dot { background: #FFD54F; }
+    .cat-pill.MEDIA  .cat-dot { background: #64B5F6; }
+    .cat-pill.PREMIUM .cat-dot { background: #CE93D8; }
+    .cat-pill.BASICA.active  { border-color: rgba(255,213,79,0.4);  background: rgba(255,213,79,0.07);  color: #FFD54F; }
+    .cat-pill.MEDIA.active   { border-color: rgba(100,181,246,0.4); background: rgba(100,181,246,0.07); color: #64B5F6; }
+    .cat-pill.PREMIUM.active { border-color: rgba(206,147,216,0.4); background: rgba(206,147,216,0.07); color: #CE93D8; }
+
+    /* Native selects */
+    .select-wrap { position: relative; display: flex; align-items: center; }
+    .native-select {
+      width: 100%; height: 40px;
+      background: #1A1A1A; border: 1px solid #252525; border-radius: 8px;
+      color: #D0D0D0; font-family: inherit; font-size: 0.855rem;
+      padding: 0 34px 0 12px; appearance: none; cursor: pointer; outline: none;
+      transition: border-color 0.15s;
+    }
+    .native-select:focus { border-color: rgba(76,175,80,0.5); }
+    .native-select option { background: #1A1A1A; color: #D0D0D0; }
+    .select-chevron {
+      position: absolute; right: 9px;
+      font-size: 16px; height: 16px; width: 16px;
+      color: #444; pointer-events: none;
+    }
+
+    /* Range inputs */
+    .range-row { display: flex; align-items: center; gap: 8px; }
+    .range-dash { color: #333; font-size: 0.85rem; flex-shrink: 0; }
+    .range-input-wrap { flex: 1; position: relative; display: flex; align-items: center; }
+    .range-prefix {
+      position: absolute; left: 10px;
+      color: #444; font-size: 0.8rem; pointer-events: none;
+    }
+    .range-input {
+      flex: 1; width: 100%; height: 40px;
+      background: #1A1A1A; border: 1px solid #252525; border-radius: 8px;
+      color: #D0D0D0; font-family: inherit; font-size: 0.855rem;
+      padding: 0 10px; outline: none;
+      transition: border-color 0.15s;
+      -moz-appearance: textfield;
+    }
+    .range-input.prefixed { padding-left: 20px; }
+    .range-input:focus { border-color: rgba(76,175,80,0.5); }
+    .range-input::placeholder { color: #383838; }
+    .range-input::-webkit-outer-spin-button,
+    .range-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    /* Footer */
+    .filtros-footer {
+      padding: 14px 20px 20px;
+      border-top: 1px solid #1A1A1A;
+      flex-shrink: 0;
+    }
+    .apply-btn {
+      width: 100%; height: 44px;
+      background: #2E7D32; color: #fff;
+      border: none; border-radius: 10px;
+      font-family: inherit; font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; letter-spacing: 0.01em;
+      transition: background 0.15s;
+    }
+    .apply-btn:hover { background: #388E3C; }
 
     /* ── Filter Toolbar ──────────────────────────────────────── */
     .filter-toolbar {
@@ -668,26 +813,34 @@ const PROVINCIAS = [
         left: 0;
         right: 0;
         width: 100%;
-        max-height: 82dvh;
+        max-height: 86dvh;
         border-right: none;
-        border-top: 1px solid #333;
+        border-top: 1px solid #1E1E1E;
         border-radius: 20px 20px 0 0;
         transform: translateY(100%);
-        padding: 0 16px 32px;
       }
       .filtros-panel.open {
         transform: translateY(0);
-        box-shadow: 0 -8px 40px rgba(0,0,0,0.7);
+        box-shadow: 0 -20px 60px rgba(0,0,0,0.7);
       }
 
-      /* Drag handle pill for bottom sheet */
+      /* Drag handle pill */
       .drawer-handle {
         display: block;
-        width: 40px; height: 4px;
-        background: #444;
+        width: 36px; height: 3px;
+        background: #2E2E2E;
         border-radius: 2px;
-        margin: 12px auto 4px;
+        margin: 10px auto 0;
+        flex-shrink: 0;
       }
+
+      /* Adjust padding for mobile */
+      .filtros-header { padding: 12px 16px 10px; }
+      .filtros-body { padding: 0 16px; }
+      .section-divider { margin: 0 -16px; }
+      .filtros-footer { padding: 12px 16px 24px; }
+      .cat-pills { gap: 6px; }
+      .cat-pill { font-size: 0.75rem; height: 36px; }
 
       /* Filter toolbar */
       .filter-toolbar {
@@ -821,6 +974,11 @@ export class ExploradorComponent implements OnInit {
     if (v.costoM2Min) chips.push({ label: `≥USD${v.costoM2Min}/m²`, key: 'costoM2Min' });
     if (v.costoM2Max) chips.push({ label: `≤USD${v.costoM2Max}/m²`, key: 'costoM2Max' });
     return chips;
+  }
+
+  toggleCategoria(cat: string): void {
+    const current = this.filtros.value.categoriaTerminacion;
+    this.filtros.patchValue({ categoriaTerminacion: current === cat ? '' : cat });
   }
 
   sortLabel(): string {
