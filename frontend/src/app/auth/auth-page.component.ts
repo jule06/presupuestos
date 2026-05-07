@@ -42,7 +42,7 @@ const ERROR_MESSAGES: Record<string, string> = {
         <!-- Header -->
         <div class="auth-header">
           <mat-icon style="color:#4CAF50;font-size:2rem;height:2rem;width:2rem;">architecture</mat-icon>
-          <h1>Proyecto Presupuesto</h1>
+          <h1>Precio Obra</h1>
           <p>La base de datos de presupuestos para arquitectos</p>
         </div>
 

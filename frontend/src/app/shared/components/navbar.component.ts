@@ -16,7 +16,7 @@ import { AuthService } from '../../auth/auth.service';
 
         <a routerLink="/" class="logo-link">
           <mat-icon style="color:#4CAF50;">architecture</mat-icon>
-          <span class="logo-text">Proyecto Presupuesto</span>
+          <span class="logo-text">Precio Obra</span>
         </a>
 
         <span class="flex-spacer"></span>
