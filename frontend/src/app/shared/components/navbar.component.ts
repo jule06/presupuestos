@@ -34,9 +34,6 @@ import { AuthService } from '../../auth/auth.service';
             } @else {
               <span class="avatar-initials">{{ initials() }}</span>
             }
-            @if (!auth.currentUser()?.perfilCompleto && auth.currentUser() !== null) {
-              <span class="perfil-dot" title="Completá tu perfil"></span>
-            }
           </button>
           <mat-menu #menu="matMenu">
             <a mat-menu-item routerLink="/perfil">
@@ -130,15 +127,6 @@ import { AuthService } from '../../auth/auth.service';
       font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
     }
 
-    .perfil-dot {
-      position: absolute;
-      top: 4px; right: 4px;
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: #f44336;
-      border: 2px solid #1A1A1A;
-      pointer-events: none;
-    }
 
     @media (max-width: 599px) {
       .desktop-link { display: none !important; }
