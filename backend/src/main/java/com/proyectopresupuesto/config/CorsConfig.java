@@ -16,6 +16,9 @@ public class CorsConfig {
     @Value("${app.frontend-url:http://localhost}")
     private String frontendUrl;
 
+    @Value("${app.extra-origins:}")
+    private String extraOrigins;
+
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
@@ -26,6 +29,12 @@ public class CorsConfig {
                 "http://localhost"
         ));
         allowedOrigins.add(frontendUrl);
+        if (extraOrigins != null && !extraOrigins.isBlank()) {
+            for (String origin : extraOrigins.split(",")) {
+                String trimmed = origin.trim();
+                if (!trimmed.isEmpty()) allowedOrigins.add(trimmed);
+            }
+        }
 
         config.setAllowedOrigins(allowedOrigins);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
