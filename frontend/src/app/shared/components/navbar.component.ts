@@ -102,10 +102,25 @@ import { AuthService } from '../../auth/auth.service';
 
     .flex-spacer { flex: 1; min-width: 8px; }
 
-    .avatar-btn { position: relative; }
+    .avatar-btn {
+      position: relative;
+      width: 36px !important;
+      height: 36px !important;
+      padding: 0 !important;
+      overflow: hidden;
+      border-radius: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
 
     .avatar-img {
-      width: 32px; height: 32px; border-radius: 50%; object-fit: cover;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
     }
 
     .avatar-initials {
