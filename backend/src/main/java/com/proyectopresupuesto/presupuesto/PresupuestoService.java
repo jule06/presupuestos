@@ -159,6 +159,7 @@ public class PresupuestoService {
     private void verificarAcceso(Long usuarioId) {
         Usuario usuario = usuarioRepo.findById(usuarioId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (usuario.getRol() == Usuario.Rol.ADMIN) return;
         if (usuario.getPresupuestosCargados() <= 0) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "Debés cargar al menos un presupuesto para acceder");

@@ -13,6 +13,7 @@ export const accessGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   const router = inject(Router);
   if (!auth.isLoggedIn()) return router.createUrlTree(['/']);
+  if (auth.isAdmin()) return true;
   const user = auth.currentUser();
   if (user && !user.accesoDesbloqueado) return router.createUrlTree(['/cargar']);
   return true;
