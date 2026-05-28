@@ -201,21 +201,17 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/model
     .stats-row {
       display: flex;
       align-items: center;
-      gap: 32px;
+      gap: 0;
       margin-bottom: 48px;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      padding-bottom: 4px;
+      flex-wrap: wrap;
     }
-    .stats-row::-webkit-scrollbar { display: none; }
 
     .stat-item {
       display: flex;
       flex-direction: column;
-      flex-shrink: 0;
+      padding: 0 28px 0 0;
     }
+    .stat-item:first-child { padding-left: 0; }
 
     .stat-number {
       font-size: 2rem;
@@ -236,6 +232,7 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/model
       width: 1px;
       height: 40px;
       background: #333;
+      margin-right: 28px;
       flex-shrink: 0;
     }
 
@@ -303,9 +300,10 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/model
     @media (max-width: 599px) {
       .hero { padding: 32px 0 24px; }
       .hero-subtitle { font-size: 0.9rem; }
-      .stats-row { gap: 20px; margin-bottom: 28px; }
+      .stats-row { margin-bottom: 28px; }
+      .stat-item { padding: 0 18px 0 0; }
+      .stat-divider { height: 32px; margin-right: 18px; }
       .stat-number { font-size: 1.5rem; }
-      .stat-divider { height: 32px; }
       .cta-section { align-items: stretch; }
       .section-title { font-size: 1.4rem; }
       .preview-grid { grid-template-columns: 1fr; gap: 12px; }
