@@ -17,3 +17,11 @@ export const accessGuard: CanActivateFn = () => {
   if (user && !user.accesoDesbloqueado) return router.createUrlTree(['/cargar']);
   return true;
 };
+
+export const adminGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  if (!auth.isLoggedIn()) return router.createUrlTree(['/auth']);
+  if (!auth.isAdmin()) return router.createUrlTree(['/']);
+  return true;
+};

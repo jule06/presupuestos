@@ -20,4 +20,5 @@ export interface Usuario {
   fechaRegistro: string;
   presupuestosCargados: number;
   accesoDesbloqueado: boolean;
+  rol?: string;
 }

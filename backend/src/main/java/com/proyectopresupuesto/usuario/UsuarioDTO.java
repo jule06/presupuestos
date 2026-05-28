@@ -23,7 +23,8 @@ public record UsuarioDTO(
         boolean perfilCompleto,
         LocalDateTime fechaRegistro,
         Integer presupuestosCargados,
-        Boolean accesoDesbloqueado
+        Boolean accesoDesbloqueado,
+        String rol
 ) {
     public static UsuarioDTO from(Usuario u) {
         return new UsuarioDTO(
@@ -32,7 +33,8 @@ public record UsuarioDTO(
                 u.getTelefono(), u.getWhatsapp(), u.getDireccion(), u.getBio(),
                 u.getLinkedinUrl(), u.getInstagramUrl(), u.getBehanceUrl(),
                 u.getPinterestUrl(), u.getSitioWeb(), u.isPerfilCompleto(),
-                u.getFechaRegistro(), u.getPresupuestosCargados(), u.getAccesoDesbloqueado()
+                u.getFechaRegistro(), u.getPresupuestosCargados(), u.getAccesoDesbloqueado(),
+                u.getRol().name()
         );
     }
 }

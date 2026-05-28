@@ -10,6 +10,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatMenuModule } from '@angular/material/menu';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ApiService } from '../core/services/api.service';
+import { AuthService } from '../auth/auth.service';
 import { Presupuesto, Estadisticas, PageResult, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/models/presupuesto.model';
 import { PresupuestoDetailDialogComponent } from './presupuesto-detail-dialog.component';
 
@@ -287,9 +288,17 @@ const PROVINCIAS = [
 
                 <div class="card-footer">
                   <span style="color:#555;font-size:0.75rem;">{{ p.fechaCarga | date:'MMM y' }}</span>
-                  <button mat-icon-button style="color:#9E9E9E;" (click)="openDetail(p);$event.stopPropagation()">
-                    <mat-icon>open_in_new</mat-icon>
-                  </button>
+                  <div class="card-footer-actions">
+                    @if (auth.isAdmin()) {
+                      <button class="btn-delete-card" title="Eliminar presupuesto"
+                              (click)="adminDelete(p, $event)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    }
+                    <button mat-icon-button style="color:#9E9E9E;" (click)="openDetail(p);$event.stopPropagation()">
+                      <mat-icon>open_in_new</mat-icon>
+                    </button>
+                  </div>
                 </div>
 
                 @if (p.contacto) {
@@ -744,6 +753,15 @@ const PROVINCIAS = [
     }
 
     .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+    .card-footer-actions { display: flex; align-items: center; gap: 2px; }
+    .btn-delete-card {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 8px;
+      background: transparent; border: none; cursor: pointer;
+      color: #555; transition: all 0.15s;
+    }
+    .btn-delete-card:hover { background: rgba(239,68,68,0.12); color: #F87171; }
+    .btn-delete-card mat-icon { font-size: 16px; height: 16px; width: 16px; }
 
     .card-contacto {
       border-top: 1px solid #2A2A2A;
@@ -912,6 +930,7 @@ export class ExploradorComponent implements OnInit {
   private api = inject(ApiService);
   private dialog = inject(MatDialog);
   private fb = inject(FormBuilder);
+  auth = inject(AuthService);
 
   presupuestos = signal<Presupuesto[]>([]);
   estadisticas = signal<Estadisticas | null>(null);
@@ -1040,6 +1059,18 @@ export class ExploradorComponent implements OnInit {
       maxHeight: isMobile ? '100dvh' : '90vh',
       height: isMobile ? '100dvh' : 'auto',
       panelClass: isMobile ? ['detail-dialog', 'mobile-fullscreen-dialog'] : ['detail-dialog']
+    });
+  }
+
+  adminDelete(p: Presupuesto, event: Event) {
+    event.stopPropagation();
+    if (!confirm(`¿Eliminar este presupuesto (${p.provincia}${p.ciudad ? ', ' + p.ciudad : ''} — ${p.tipoObra})?`)) return;
+    this.api.adminDeletePresupuesto(p.id).subscribe({
+      next: () => {
+        this.presupuestos.update(list => list.filter(x => x.id !== p.id));
+        this.totalElements.update(n => Math.max(0, n - 1));
+      },
+      error: () => alert('Error al eliminar el presupuesto.')
     });
   }
 

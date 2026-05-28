@@ -96,4 +96,17 @@ export class ApiService {
   eliminarPresupuesto(id: number): Observable<void> {
     return this.http.delete<void>(`${this.base}/presupuestos/${id}`);
   }
+
+  // Admin
+  adminGetUsuarios(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`${this.base}/admin/usuarios`);
+  }
+
+  adminDeleteAllPresupuestos(): Observable<{ message: string; eliminados: number }> {
+    return this.http.delete<{ message: string; eliminados: number }>(`${this.base}/admin/presupuestos`);
+  }
+
+  adminDeletePresupuesto(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.base}/admin/presupuestos/${id}`);
+  }
 }

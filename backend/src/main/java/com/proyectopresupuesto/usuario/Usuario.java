@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class Usuario {
 
     public enum AuthProvider { LOCAL, GOOGLE }
+    public enum Rol { USER, ADMIN }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,4 +93,8 @@ public class Usuario {
 
     @Column(name = "acceso_desbloqueado", nullable = false)
     private Boolean accesoDesbloqueado = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    private Rol rol = Rol.USER;
 }

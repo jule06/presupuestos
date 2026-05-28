@@ -13,6 +13,7 @@ export class AuthService {
   private readonly _token = signal<string | null>(localStorage.getItem(this.TOKEN_KEY));
   readonly currentUser = signal<Usuario | null>(null);
   readonly isLoggedIn = computed(() => this._token() !== null);
+  readonly isAdmin = computed(() => this.currentUser()?.rol === 'ADMIN');
 
   constructor(private api: ApiService, private router: Router) {}
 

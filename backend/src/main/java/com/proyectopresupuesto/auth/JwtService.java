@@ -30,6 +30,7 @@ public class JwtService {
                 .subject(String.valueOf(usuario.getId()))
                 .claim("email", usuario.getEmail())
                 .claim("acceso", usuario.getAccesoDesbloqueado())
+                .claim("rol", usuario.getRol().name())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key)
@@ -46,6 +47,10 @@ public class JwtService {
         Long id = Long.parseLong(claims.getSubject());
         String email = claims.get("email", String.class);
         boolean acceso = Boolean.TRUE.equals(claims.get("acceso", Boolean.class));
-        return new CurrentUser(id, email, acceso);
+        String rolStr = claims.get("rol", String.class);
+        com.proyectopresupuesto.usuario.Usuario.Rol rol;
+        try { rol = com.proyectopresupuesto.usuario.Usuario.Rol.valueOf(rolStr); }
+        catch (Exception e) { rol = com.proyectopresupuesto.usuario.Usuario.Rol.USER; }
+        return new CurrentUser(id, email, acceso, rol);
     }
 }

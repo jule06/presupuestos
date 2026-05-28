@@ -45,6 +45,11 @@ import { AuthService } from '../../auth/auth.service';
             <a mat-menu-item routerLink="/cargar">
               <mat-icon>add</mat-icon> Cargar presupuesto
             </a>
+            @if (auth.isAdmin()) {
+              <a mat-menu-item routerLink="/admin" style="color:#81C784;">
+                <mat-icon style="color:#4CAF50;">admin_panel_settings</mat-icon> Administración
+              </a>
+            }
             <button mat-menu-item (click)="auth.logout()">
               <mat-icon>logout</mat-icon> Salir
             </button>
