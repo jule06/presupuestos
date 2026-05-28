@@ -1,0 +1,50 @@
+package com.proyectopresupuesto.config;
+
+import com.proyectopresupuesto.presupuesto.PresupuestoRepository;
+import com.proyectopresupuesto.usuario.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StreamUtils;
+
+import java.nio.charset.StandardCharsets;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+@Profile("!test")
+public class DataSeeder implements ApplicationRunner {
+
+    private final PresupuestoRepository presupuestoRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final JdbcTemplate jdbcTemplate;
+
+    @Override
+    public void run(ApplicationArguments args) {
+        if (presupuestoRepository.count() > 0) {
+            log.info("DataSeeder: ya existen presupuestos en la base de datos, seed omitido.");
+            return;
+        }
+
+        if (usuarioRepository.count() == 0) {
+            log.warn("DataSeeder: no hay usuarios registrados. Registrate primero y reiniciá la app para cargar el seed.");
+            return;
+        }
+
+        try {
+            log.info("DataSeeder: cargando 322 presupuestos de muestra...");
+            ClassPathResource resource = new ClassPathResource("db/seed/seed_presupuestos.sql");
+            String sql = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+            jdbcTemplate.execute(sql);
+            long total = presupuestoRepository.count();
+            log.info("DataSeeder: seed completado exitosamente. Total presupuestos: {}", total);
+        } catch (Exception e) {
+            log.error("DataSeeder: error al ejecutar el seed — {}", e.getMessage(), e);
+        }
+    }
+}
