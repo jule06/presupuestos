@@ -11,12 +11,19 @@ from datetime import datetime, timedelta
 
 random.seed(42)
 
-# ── Valores base ARS/m² por categoría (referencia 2024-2025) ──────────────────
+# ── Valores base ARS/m² por categoría ─────────────────────────────────────────
+# Calibrados para dar totales realistas: $3.000 – $100.000 USD
+# (tipo de cambio referencia ~$1.000 ARS/USD promedio del período 2022-2025)
+# BASICA:  USD 200-380/m²  → obras económicas / Procrear
+# MEDIA:   USD 380-650/m²  → construcción estándar llave en mano
+# PREMIUM: USD 600-950/m²  → alta gama / countries
 COSTO_BASE = {
-    "BASICA":  {"min": 720_000,  "max": 970_000},
-    "MEDIA":   {"min": 960_000,  "max": 1_320_000},
-    "PREMIUM": {"min": 1_320_000,"max": 2_150_000},
+    "BASICA":  {"min": 200_000,  "max": 380_000},
+    "MEDIA":   {"min": 380_000,  "max": 650_000},
+    "PREMIUM": {"min": 600_000,  "max": 950_000},
 }
+
+MAX_COSTO_TOTAL = 100_000_000  # ~$100.000 USD techo absoluto
 
 # ── Factor regional ────────────────────────────────────────────────────────────
 REGIONES = {
@@ -36,12 +43,12 @@ REGIONES = {
 
 # ── Factor por tipo de obra (relativo a vivienda nueva) ───────────────────────
 TIPO_OBRA_CONFIG = {
-    "VIVIENDA_NUEVA":    {"factor": 1.00, "m2_min": 60,  "m2_max": 280, "dur_min": 8,  "dur_max": 18},
-    "REFORMA_PARCIAL":   {"factor": 0.55, "m2_min": 8,   "m2_max": 50,  "dur_min": 1,  "dur_max": 4},
-    "REFORMA_INTEGRAL":  {"factor": 0.76, "m2_min": 45,  "m2_max": 140, "dur_min": 3,  "dur_max": 7},
-    "LOCAL_COMERCIAL":   {"factor": 1.05, "m2_min": 30,  "m2_max": 220, "dur_min": 2,  "dur_max": 8},
-    "OFICINA":           {"factor": 0.95, "m2_min": 40,  "m2_max": 300, "dur_min": 2,  "dur_max": 7},
-    "OTRO":              {"factor": 0.85, "m2_min": 20,  "m2_max": 150, "dur_min": 2,  "dur_max": 9},
+    "VIVIENDA_NUEVA":    {"factor": 1.00, "m2_min": 45,  "m2_max": 180, "dur_min": 8,  "dur_max": 16},
+    "REFORMA_PARCIAL":   {"factor": 0.55, "m2_min": 6,   "m2_max": 45,  "dur_min": 1,  "dur_max": 4},
+    "REFORMA_INTEGRAL":  {"factor": 0.76, "m2_min": 35,  "m2_max": 120, "dur_min": 3,  "dur_max": 7},
+    "LOCAL_COMERCIAL":   {"factor": 1.05, "m2_min": 25,  "m2_max": 150, "dur_min": 2,  "dur_max": 7},
+    "OFICINA":           {"factor": 0.95, "m2_min": 30,  "m2_max": 200, "dur_min": 2,  "dur_max": 6},
+    "OTRO":              {"factor": 0.85, "m2_min": 15,  "m2_max": 100, "dur_min": 1,  "dur_max": 7},
 }
 
 # ── Distribución deseada ──────────────────────────────────────────────────────
@@ -177,6 +184,10 @@ for tipo, cantidad in DIST_TIPO:
         cpm2 = redondear(cpm2, 1000)
 
         costo_total = redondear(cpm2 * m2, 10000)
+        # Cap absoluto: si supera el techo, reducimos la superficie proporcionalmente
+        if costo_total > MAX_COSTO_TOTAL:
+            costo_total = redondear(MAX_COSTO_TOTAL * random.uniform(0.80, 1.00), 10000)
+            m2 = round(costo_total / cpm2, 1)
 
         # Año presupuesto (más recientes = más frecuentes)
         anio = random.choices([2022, 2023, 2024, 2025], weights=[8, 20, 42, 30])[0]
