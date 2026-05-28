@@ -30,21 +30,24 @@ public class DataSeeder implements ApplicationRunner {
             log.info("DataSeeder: ya existen presupuestos en la base de datos, seed omitido.");
             return;
         }
+        ejecutarSeed();
+    }
 
+    public long ejecutarSeed() {
         if (usuarioRepository.count() == 0) {
-            log.warn("DataSeeder: no hay usuarios registrados. Registrate primero y reiniciá la app para cargar el seed.");
-            return;
+            throw new IllegalStateException("No hay usuarios registrados.");
         }
-
         try {
-            log.info("DataSeeder: cargando 322 presupuestos de muestra...");
+            log.info("DataSeeder: cargando presupuestos de muestra...");
             ClassPathResource resource = new ClassPathResource("db/seed/seed_presupuestos.sql");
             String sql = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
             jdbcTemplate.execute(sql);
             long total = presupuestoRepository.count();
-            log.info("DataSeeder: seed completado exitosamente. Total presupuestos: {}", total);
+            log.info("DataSeeder: seed completado. Total presupuestos: {}", total);
+            return total;
         } catch (Exception e) {
             log.error("DataSeeder: error al ejecutar el seed — {}", e.getMessage(), e);
+            throw new RuntimeException("Error al ejecutar el seed: " + e.getMessage(), e);
         }
     }
 }

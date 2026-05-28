@@ -1,5 +1,6 @@
 package com.proyectopresupuesto.admin;
 
+import com.proyectopresupuesto.config.DataSeeder;
 import com.proyectopresupuesto.presupuesto.PresupuestoRepository;
 import com.proyectopresupuesto.usuario.Usuario;
 import com.proyectopresupuesto.usuario.UsuarioDTO;
@@ -18,6 +19,7 @@ public class AdminController {
 
     private final PresupuestoRepository presupuestoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final DataSeeder dataSeeder;
 
     /** Borra TODOS los presupuestos */
     @DeleteMapping("/presupuestos")
@@ -53,5 +55,21 @@ public class AdminController {
     @GetMapping("/usuarios")
     public List<UsuarioDTO> getUsuarios() {
         return usuarioRepository.findAll().stream().map(UsuarioDTO::from).toList();
+    }
+
+    /** Ejecuta el seed de presupuestos */
+    @PostMapping("/seed")
+    public ResponseEntity<Map<String, Object>> ejecutarSeed() {
+        try {
+            long total = dataSeeder.ejecutarSeed();
+            return ResponseEntity.ok(Map.of(
+                "message", "Seed ejecutado correctamente.",
+                "total", total
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                "message", "Error al ejecutar seed: " + e.getMessage()
+            ));
+        }
     }
 }

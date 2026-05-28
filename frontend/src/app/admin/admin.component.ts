@@ -57,6 +57,35 @@ import { Usuario } from '../shared/models/usuario.model';
               {{ deleteMsg() }}
             </div>
           }
+
+          <div class="action-card seed-card">
+            <div class="action-info">
+              <div class="action-name">Cargar seed de presupuestos</div>
+              <div class="action-desc">
+                Inserta los presupuestos de muestra (CABA y Buenos Aires).
+                Podés ejecutarlo aunque ya haya datos — se agregan encima de los existentes.
+              </div>
+            </div>
+            <button
+              class="btn-seed"
+              [disabled]="seeding()"
+              (click)="ejecutarSeed()">
+              @if (seeding()) {
+                <mat-icon class="spin">hourglass_empty</mat-icon>
+                Cargando...
+              } @else {
+                <mat-icon>upload</mat-icon>
+                Cargar seed
+              }
+            </button>
+          </div>
+
+          @if (seedMsg()) {
+            <div class="feedback-msg" [class.error]="seedError()">
+              <mat-icon>{{ seedError() ? 'error' : 'check_circle' }}</mat-icon>
+              {{ seedMsg() }}
+            </div>
+          }
         </section>
 
         <!-- Users section -->
@@ -273,6 +302,36 @@ import { Usuario } from '../shared/models/usuario.model';
     }
     .btn-danger mat-icon { font-size: 18px; height: 18px; width: 18px; }
 
+    .seed-card {
+      border-color: rgba(76,175,80,0.18);
+      background: rgba(76,175,80,0.04);
+    }
+
+    .btn-seed {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 18px;
+      height: 40px;
+      background: rgba(76,175,80,0.12);
+      border: 1px solid rgba(76,175,80,0.3);
+      border-radius: 8px;
+      color: #81C784;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .btn-seed:hover:not(:disabled) {
+      background: rgba(76,175,80,0.2);
+      border-color: rgba(76,175,80,0.5);
+    }
+    .btn-seed:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-seed mat-icon { font-size: 18px; height: 18px; width: 18px; }
+
     .btn-secondary {
       display: inline-flex;
       align-items: center;
@@ -445,6 +504,9 @@ export class AdminComponent implements OnInit {
   deleting = signal(false);
   deleteMsg = signal('');
   deleteError = signal(false);
+  seeding = signal(false);
+  seedMsg = signal('');
+  seedError = signal(false);
 
   ngOnInit() {
     this.loadUsuarios();
@@ -476,6 +538,24 @@ export class AdminComponent implements OnInit {
         this.deleting.set(false);
         this.deleteError.set(true);
         this.deleteMsg.set('Error al eliminar los presupuestos. Intente nuevamente.');
+      }
+    });
+  }
+
+  ejecutarSeed() {
+    this.seeding.set(true);
+    this.seedMsg.set('');
+    this.api.adminEjecutarSeed().subscribe({
+      next: (res) => {
+        this.seeding.set(false);
+        this.seedError.set(false);
+        this.seedMsg.set(`${res.message} Total en base de datos: ${res.total} presupuestos.`);
+        this.loadUsuarios();
+      },
+      error: (err) => {
+        this.seeding.set(false);
+        this.seedError.set(true);
+        this.seedMsg.set(err?.error?.message ?? 'Error al ejecutar el seed.');
       }
     });
   }

@@ -109,4 +109,8 @@ export class ApiService {
   adminDeletePresupuesto(id: number): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.base}/admin/presupuestos/${id}`);
   }
+
+  adminEjecutarSeed(): Observable<{ message: string; total: number }> {
+    return this.http.post<{ message: string; total: number }>(`${this.base}/admin/seed`, {});
+  }
 }
