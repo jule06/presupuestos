@@ -151,7 +151,7 @@ const PROVINCIAS = [
 
           <!-- Costo/m² -->
           <div class="filter-section">
-            <div class="section-label">Costo/m² (USD)</div>
+            <div class="section-label">Costo/m² (ARS)</div>
             <div class="range-row">
               <div class="range-input-wrap">
                 <span class="range-prefix">$</span>
@@ -226,19 +226,19 @@ const PROVINCIAS = [
           @if (estadisticas()) {
             <div class="stats-bar">
               <div class="stat-box">
-                <span class="stat-number">USD {{ estadisticas()!.promedioCostoM2 | number:'1.0-0' }}</span>
+                <span class="stat-number">ARS {{ estadisticas()!.promedioCostoM2 | number:'1.0-0' }}</span>
                 <span class="stat-label">Promedio /m²</span>
               </div>
               <div class="stat-box">
-                <span class="stat-number">USD {{ estadisticas()!.medianaCostoM2 | number:'1.0-0' }}</span>
+                <span class="stat-number">ARS {{ estadisticas()!.medianaCostoM2 | number:'1.0-0' }}</span>
                 <span class="stat-label">Mediana /m²</span>
               </div>
               <div class="stat-box">
-                <span class="stat-number">USD {{ estadisticas()!.minCostoM2 | number:'1.0-0' }}</span>
+                <span class="stat-number">ARS {{ estadisticas()!.minCostoM2 | number:'1.0-0' }}</span>
                 <span class="stat-label">Mínimo /m²</span>
               </div>
               <div class="stat-box">
-                <span class="stat-number">USD {{ estadisticas()!.maxCostoM2 | number:'1.0-0' }}</span>
+                <span class="stat-number">ARS {{ estadisticas()!.maxCostoM2 | number:'1.0-0' }}</span>
                 <span class="stat-label">Máximo /m²</span>
               </div>
               <div class="stat-box">
@@ -274,10 +274,10 @@ const PROVINCIAS = [
                 </div>
 
                 <div class="card-price">
-                  <span class="price-m2">USD {{ p.costoPorM2 | number:'1.0-0' }}</span>
+                  <span class="price-m2">ARS {{ p.costoPorM2 | number:'1.0-0' }}</span>
                   <span class="price-unit">/m²</span>
                 </div>
-                <div class="price-total">Total: USD {{ p.costoTotal | number:'1.0-0' }}</div>
+                <div class="price-total">Total: ARS {{ p.costoTotal | number:'1.0-0' }}</div>
 
                 @if (p.desglose) {
                   <div class="card-desglose-hint">
@@ -977,8 +977,8 @@ export class ExploradorComponent implements OnInit {
     if (v.anioHasta) chips.push({ label: `Hasta ${v.anioHasta}`, key: 'anioHasta' });
     if (v.m2Min) chips.push({ label: `≥${v.m2Min}m²`, key: 'm2Min' });
     if (v.m2Max) chips.push({ label: `≤${v.m2Max}m²`, key: 'm2Max' });
-    if (v.costoM2Min) chips.push({ label: `≥USD${v.costoM2Min}/m²`, key: 'costoM2Min' });
-    if (v.costoM2Max) chips.push({ label: `≤USD${v.costoM2Max}/m²`, key: 'costoM2Max' });
+    if (v.costoM2Min) chips.push({ label: `≥ARS${v.costoM2Min}/m²`, key: 'costoM2Min' });
+    if (v.costoM2Max) chips.push({ label: `≤ARS${v.costoM2Max}/m²`, key: 'costoM2Max' });
     return chips;
   }
 

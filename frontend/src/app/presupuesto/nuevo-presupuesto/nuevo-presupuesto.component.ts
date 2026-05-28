@@ -124,16 +124,16 @@ const PROVINCIAS = [
       @if (currentStep === 2) {
         <form [formGroup]="paso2" class="step-content" (submit)="$event.preventDefault()">
           <mat-form-field appearance="outline" style="width:100%">
-            <mat-label>Costo total (USD)</mat-label>
-            <span matTextPrefix>USD&nbsp;</span>
+            <mat-label>Costo total (ARS)</mat-label>
+            <span matTextPrefix>ARS&nbsp;</span>
             <input matInput type="number" formControlName="costoTotal" min="1">
-            <mat-hint>Ingresá el total en dólares</mat-hint>
+            <mat-hint>Ingresá el total en pesos</mat-hint>
           </mat-form-field>
 
           @if (paso1.value.superficieM2 && paso2.value.costoTotal) {
             <div class="calc-preview">
               <mat-icon>calculate</mat-icon>
-              USD {{ paso2.value.costoTotal! / paso1.value.superficieM2! | number:'1.0-0' }} / m²
+              ARS {{ paso2.value.costoTotal! / paso1.value.superficieM2! | number:'1.0-0' }} / m²
             </div>
           }
 
@@ -145,21 +145,21 @@ const PROVINCIAS = [
           <div formGroupName="desglose">
             <div class="form-row">
               <mat-form-field appearance="outline" style="flex:1">
-                <mat-label>Estructura (USD)</mat-label>
+                <mat-label>Estructura (ARS)</mat-label>
                 <input matInput type="number" formControlName="estructura" min="0">
               </mat-form-field>
               <mat-form-field appearance="outline" style="flex:1">
-                <mat-label>Instalaciones (USD)</mat-label>
+                <mat-label>Instalaciones (ARS)</mat-label>
                 <input matInput type="number" formControlName="instalaciones" min="0">
               </mat-form-field>
             </div>
             <div class="form-row">
               <mat-form-field appearance="outline" style="flex:1">
-                <mat-label>Terminaciones (USD)</mat-label>
+                <mat-label>Terminaciones (ARS)</mat-label>
                 <input matInput type="number" formControlName="terminaciones" min="0">
               </mat-form-field>
               <mat-form-field appearance="outline" style="flex:1">
-                <mat-label>Honorarios (USD)</mat-label>
+                <mat-label>Honorarios (ARS)</mat-label>
                 <input matInput type="number" formControlName="honorarios" min="0">
               </mat-form-field>
             </div>

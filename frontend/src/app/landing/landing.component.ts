@@ -130,12 +130,12 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS } from '../shared/model
                   </div>
                   <div style="display:flex; align-items:baseline; gap:8px;">
                     <span style="font-size:1.8rem; font-weight:700; color:#4CAF50;">
-                      USD {{ p.costoPorM2 | number:'1.0-0' }}
+                      ARS {{ p.costoPorM2 | number:'1.0-0' }}
                     </span>
                     <span style="color:#9E9E9E; font-size:0.85rem;">/m²</span>
                   </div>
                   <div style="color:#9E9E9E; font-size:0.8rem; margin-top:4px;">
-                    Total: USD {{ p.costoTotal | number:'1.0-0' }}
+                    Total: ARS {{ p.costoTotal | number:'1.0-0' }}
                   </div>
                 </div>
                 <div class="lock-icon">

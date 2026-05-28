@@ -337,7 +337,7 @@ const PROVINCIAS = [
               </div>
               <div class="row-price">
                 <span style="font-size:1.3rem; font-weight:700; color:#4CAF50;">
-                  USD {{ p.costoPorM2 | number:'1.0-0' }}/m²
+                  ARS {{ p.costoPorM2 | number:'1.0-0' }}/m²
                 </span>
               </div>
               <button mat-icon-button style="color:#f44336;" (click)="confirmarEliminar(p);$event.stopPropagation()"

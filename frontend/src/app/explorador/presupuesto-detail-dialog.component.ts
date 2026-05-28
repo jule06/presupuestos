@@ -28,8 +28,8 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS, GANO_LABELS, TIPO_CLIE
         <!-- Precio destacado -->
         <div class="price-hero">
           <div>
-            <div class="price-big">USD {{ data.costoPorM2 | number:'1.0-0' }}<span class="price-unit">/m²</span></div>
-            <div style="color:#9E9E9E; font-size:0.9rem;">Total: USD {{ data.costoTotal | number:'1.0-0' }}</div>
+            <div class="price-big">ARS {{ data.costoPorM2 | number:'1.0-0' }}<span class="price-unit">/m²</span></div>
+            <div style="color:#9E9E9E; font-size:0.9rem;">Total: ARS {{ data.costoTotal | number:'1.0-0' }}</div>
           </div>
         </div>
 
@@ -95,28 +95,28 @@ import { Presupuesto, TIPO_OBRA_LABELS, CATEGORIA_LABELS, GANO_LABELS, TIPO_CLIE
             @if (data.desglose!['estructura']) {
               <div class="desglose-item">
                 <span>Estructura</span>
-                <span class="desglose-value">USD {{ data.desglose!['estructura'] | number:'1.0-0' }}</span>
+                <span class="desglose-value">ARS {{ data.desglose!['estructura'] | number:'1.0-0' }}</span>
                 <span class="desglose-pct">{{ pct(data.desglose!['estructura']) }}%</span>
               </div>
             }
             @if (data.desglose!['instalaciones']) {
               <div class="desglose-item">
                 <span>Instalaciones</span>
-                <span class="desglose-value">USD {{ data.desglose!['instalaciones'] | number:'1.0-0' }}</span>
+                <span class="desglose-value">ARS {{ data.desglose!['instalaciones'] | number:'1.0-0' }}</span>
                 <span class="desglose-pct">{{ pct(data.desglose!['instalaciones']) }}%</span>
               </div>
             }
             @if (data.desglose!['terminaciones']) {
               <div class="desglose-item">
                 <span>Terminaciones</span>
-                <span class="desglose-value">USD {{ data.desglose!['terminaciones'] | number:'1.0-0' }}</span>
+                <span class="desglose-value">ARS {{ data.desglose!['terminaciones'] | number:'1.0-0' }}</span>
                 <span class="desglose-pct">{{ pct(data.desglose!['terminaciones']) }}%</span>
               </div>
             }
             @if (data.desglose!['honorarios']) {
               <div class="desglose-item">
                 <span>Honorarios</span>
-                <span class="desglose-value">USD {{ data.desglose!['honorarios'] | number:'1.0-0' }}</span>
+                <span class="desglose-value">ARS {{ data.desglose!['honorarios'] | number:'1.0-0' }}</span>
                 <span class="desglose-pct">{{ pct(data.desglose!['honorarios']) }}%</span>
               </div>
             }
